@@ -1,0 +1,45 @@
+High level steps to install Bitwarden on Windows 11
+
+- Prerequisites
+a) Create Gmail account
+b) Generate App password in Gmail
+c) Create Docker hub account with same Gmail Id
+d) Register A host record under domain registrant
+
+1) Allow Inbound ports 80 & 443 at NSG or Azure VM Network card settings [port 80 is not required optional in the environment]
+2) Download and Install Docker Desktop 
+3) Create Docker Hub account
+4) Under Docker Desktop, Set & allocate 4GB Memory as per Bitwarden requirement
+5) Create Bitwarden User & Directory (under C:\Bitwarden)
+6) Navigate to Bitwarden Directory and Run the Bitwarden api using PowerShell (This will download a PowerShell Script named as "bitwarden")
+7) Install Windows Subsytem Linux (WSL) through PowerShell command "wsl.exe --install" 
+8) Click Start Menu -> Ubuntu (This will install Ubuntu, Wizard will allow to create username & password)
+9) Once Ubuntu up & running 
+10) Navigate to "C:\Bitwarden" directory
+11) run the PowerShell script ".\bitwarden.ps1 -install"
+12) Follow the installation Wizard
+    Enter domain name= xyz.abc.ca [xyz is a host record which we registered with the domain registrant example: GoDaddy]
+    Do you want to use Let's Encrypt to generate a free SSL certificate = N
+    Enter the database name for Bitwarden instance
+    Enter the Bitwarden installation Id & Key
+    Enter the region: US
+    Enter the SSL certificate to use= N
+
+After entering the above details, the Wizard will take approx. 5 - 8 minutes to complete it
+
+13) Now start the Bitwarden by running the command (.\bitwarden.ps1 -start)
+14) There's one Pop-up appears says "Do you want to allow public and private networks to access this app?" Click on Allow
+15) Once the Bitwarden started successfully
+16) Validate the Bitwarden URL from External sources [Ignore the SSL cert error as this is a test environment]
+17) Validate the Bitwarden URL from Internal sources [Make sure to edit system host file and add the local IP pointed to Bitwarden hostname which register at GoDaddy]
+18) Now edit the global.override.env file to set the following parameters except haveibeenpwned API  [Note: For this test environment not used it as paid API] so mark as ""
+    replyToEmail, smtp_host, smtp_username, smtp_password, adminSettings_admins
+19) After configured the above settings save the env file
+20) Prior to restart the Bitwarden container [Ensure the current system is up & running]
+21) To verify the docker container running execute the command "docker ps -a"
+22) Restart the Bitwarden container running execute the command ".\bitwarden.ps1 -restart"
+23) Access the Bitwarden URL [Click on create, type new master password, reconfirm] click on create account
+24) Now Login with the Email & Master password
+25) Once the Portal login accessible, verify the email to ensure it sends a test email
+
+    
